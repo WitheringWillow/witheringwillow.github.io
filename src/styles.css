@@ -1,0 +1,32 @@
+body {
+    font-family: "Montserrat", sans-serif;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp0jRh2J1P78DC6nejZmzGTCsrT8R5JUs26KQFrFFa-HXPmnUyPyCiuKaUNMpGUoGj61E:https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/640px-Transgender_Pride_flag.svg.png&usqp=CAU');
+}
+
+@keyframes grow {
+    from {
+        height: 100px;
+    }
+    to {
+        height: 200px;
+    }
+}
+
+@keyframes expand {
+    from {
+        height: 20px;
+    }
+    to {
+        height: 50px;
+    }
+}
+
+#pi:hover {
+    height: 200px;
+    animation-name: grow;
+    animation-duration: 4s;
+}
+
+#berrycount {
+    font-size: 30px;
+}
