@@ -1,20 +1,38 @@
 <!DOCTYPE html>
-<html>
-<head>
-<link rel="https://static.miraheze.org/celestewiki/thumb/6/6a/Bounceline.gif/120px-Bounceline.gif" href="favicon.png" type="image/gif"> 
-  <!-- fix the line above, try to add icon to the tab bar -->
-<title>π = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825</title>
-<style>
-  #pi:hover {
-    color:purple;
-  }
-</style>
-</head>
-<body style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp0jRh2J1P78DC6nejZmzGTCsrT8R5JUs26KQFrFFa-HXPmnUyPyCiuKaUNMpGUoGj61E:https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/640px-Transgender_Pride_flag.svg.png&usqp=CAU');">
 
-  <h1>Trans Rights are Human Rights!</h1>
-  <p id="pi">Happy pi day</p>
-  <img src="https://www.chocolatesandchai.com/wp-content/uploads/2021/03/Celeste-Strawberry-Pie-18.jpg" height="100">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-8kK6NCjfv2kfQdFRfiSqH812oC9WthRwEZRjq_s2vW5YTn-kEpyb_Saxs-2Owb385FE:https://i.imgur.com/wkk9T3l.jpg&usqp=CAU" height="500">
+<html>
+<link rel="icon" href="https://static.miraheze.org/celestewiki/thumb/6/6a/Bounceline.gif/120px-Bounceline.gif" type="image/gif">
+
+<head>
+    <title>
+        π = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825
+    </title>
+    <link rel="stylesheet" href="src/styles.css" />
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
+
+        body {
+            font-family: "Montserrat", sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Trans Rights are Human Rights!</h1>
+    <p>Happy pi day!</p>
+    <img id="pi" src="https://www.chocolatesandchai.com/wp-content/uploads/2021/03/Celeste-Strawberry-Pie-18.jpg"
+        height="100" />
+    <br />
+    <img src="https://i0.wp.com/upload.wikimedia.org/wikipedia/commons/thumb/4/42/Celeste_character_Madeline.png/1200px-Celeste_character_Madeline.png"
+        height="500" />
+    <button id="berrybutton">Berry button</button>
+    <div id="berrytracker">
+        <img src="img/Strawberry.png" height="25" />
+        x
+        <span id="berrycount">0</span>
+    </div>
+    <div id="berries"></div>
+    <script src="src/berry.js"></script>
 </body>
+
 </html>
