@@ -5,6 +5,7 @@ const berrydiv = document.getElementById("berries");
 const berrycount = document.getElementById("berrycount");
 berrybutton.addEventListener("click", addBerry);
 
+
 function addBerry() {
   const bery = document.createElement("img");
   randomberry = Math.random();
