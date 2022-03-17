@@ -27,7 +27,7 @@ const pie = document.getElementById("pi");
 pie.addEventListener("click", eatPie);
 
 function eatPie() {
-  pie.setAttribute("src", "https://cdn.discordapp.com/attachments/691726446917451847/951162723364929636/7476D5BF-3BB0-49BC-8EA6-D7103AB9A622.gif");
+  pie.setAttribute("src", "img/wow.gif");
   setTimeout(function (){
   
     pie.setAttribute("style", "display:none");
