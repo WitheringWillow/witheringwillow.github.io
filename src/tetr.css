@@ -1,16 +1,8 @@
 body {
     font-family: "Montserrat", sans-serif;
-}
-
-.dark {
     background-color: rgb(40, 40, 40);
 }
-canvas {
-    height: 800px;
-}
 
-#grid {
-    border: 2px dashed black;
-    width:350px;
-    height:695px;
+#tetris {
+    border: 3px dashed white;
 }

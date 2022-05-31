@@ -1,24 +1,26 @@
+// Setup
 import { blocks } from './blocks.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-
-const width = canvas.width = window.innerWidth;
-const height = canvas.height = window.innerHeight;
-
-const darktheme = document.getElementById("dark");
-const bg = document.getElementById("main");
-
-var current_piece = blocks["t"][1];
-console.log(current_piece);
 
 
 var grid = [];
 for(var i = 0 ; i < 20; i++) {
   grid.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 }
-grid[19][1] = 1;
 
+grid[12] = [1,1,0,0,0,0,6,6,6,6]
+grid[13] = [5,1,1,0,0,0,3,7,7,4]
+grid[14] = [5,5,2,2,0,0,3,7,7,4]
+grid[15] = [5,2,2,0,0,0,3,3,4,4]
+grid[16] = [8,8,8,8,0,8,8,8,8,8]
+grid[17] = [8,8,8,8,0,8,8,8,8,8]
+grid[18] = [8,8,8,8,0,8,8,8,8,8]
+grid[19] = [8,8,8,8,0,8,8,8,8,8]
+
+
+// Visuals
 class Mino {
   constructor(x, y, color) {
     this.x = x;
@@ -27,15 +29,8 @@ class Mino {
   }
 
   draw() {
-    // ctx.fillStyle = 'rgb(0, 0, 0)';
-    // ctx.fillRect(this.x+1, this.y+1, 38, 38);
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.x+10, this.y+2, 20, 36);
-    ctx.fillRect(this.x+2, this.y+10, 36, 20);
-  }
-
-  godown() {
-    this.y += 40;
+    ctx.fillRect(this.x+2, this.y+2, 36, 36);
   }
 }
 
@@ -52,40 +47,85 @@ display();
 
 function color(x) {
   switch(x) {
-    case 0:
+    case 0: // None
       return 'rgb(128, 128, 128)';
-    case 1:
+    case 1: // Z
       return 'rgb(255, 0, 0)';
+    case 2: // S
+      return 'rgb(0, 255, 0)';
+    case 3: // L
+      return 'rgb(255, 128, 0)';
+    case 4: // J
+      return 'rgb(0, 64, 255)';
+    case 5: // T
+      return 'rgb(192, 0, 255)';
+    case 6: // I
+      return 'rgb(0, 192, 256)';
+    case 7: // O
+      return 'rgb(256, 224, 0)';
     default:
-      return 'rgb(0, 0, 0)';
+      return 'rgb(64, 64, 64)';
   }
 }
 
+// Helper functions 
+
+function addMinos(shape, x, y) {
+  var polysize = shape.length;
+  //check if the position is valid
+  for(var i = 0; i < polysize; i++) {
+    for(var j = 0; j < polysize; j++) {
+      var checkx = i + x;
+      var checky = j + y;
+      if(shape[i][j] != 0 && grid[checkx][checky] != 0) {
+        // console.log(i + ", " + j + "is invalid");
+        return;
+      }
+    }
+  }
+  //place the piece
+  for(var i = 0; i < polysize; i++) {
+    for(var j = 0; j < polysize; j++) {
+      var checkx = i + x;
+      var checky = j + y;
+      if(shape[i][j] != 0) {
+        grid[checkx][checky] = shape[i][j];
+      }
+    }
+  }
+}
+
+// Gameplay
 addEventListener("keydown", press);
 
 function press(e) {
   console.log(e);
   if(e.key == "ArrowDown") {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    display();
+    // move active block downward
   }
+  if(e.key == "ArrowLeft") {
+    // move active block left
+  }
+  if(e.key == "ArrowRight") {
+    // move active block right
+  }
+  if(e.key == "ArrowUp") {
+    // rotate active block clockwise
+  }
+  if(e.key == "KeyZ") {
+    // rotate active block counterclockwise
+  }
+
+
+  if(e.key == "Space") {
+    // drop the block onto the floor automatically
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  display();
 }
 
-darktheme.addEventListener("click", switchTheme);
-var active = "Light";
 
-function switchTheme() {
-  if(active == "Light") {
-    bg.classList.add("dark");
-    active = "Dark";
-    darktheme.innerText = "Light Mode"
-  } else {
-    bg.classList.remove("dark");
-    active = "Light";
-    darktheme.innerText = "Dark Mode"
-
-  }
-}
 
 var frames_per_down = 50;
 var frames_until_down = 50;
@@ -95,6 +135,15 @@ setInterval(gameloop,20);
 function gameloop() {
 
 }
+
+
+
+
+
+
+
+
+// Favicon
 
 var favicon_images = [
   'img/gif/frame_0_delay-0.04s.gif',
@@ -123,5 +172,3 @@ image_counter = 0;
 else
 image_counter++;
 }, 100);
-
-
