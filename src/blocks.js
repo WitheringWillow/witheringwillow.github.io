@@ -1,5 +1,5 @@
 class Polymino {
-    constructor(grid, color) {
+    constructor(grid) {
         this.standard = grid;
     }
     
@@ -25,6 +25,10 @@ class Polymino {
             temp2 = JSON.parse(JSON.stringify(temp));
         }
         return temp;
+    }
+    
+    return() {
+        this.standard;
     }
 }
 

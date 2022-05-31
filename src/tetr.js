@@ -25,6 +25,7 @@ class Mino {
 }
 
 function display() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   for(var row = 0; row < 20; row++) {
     for(var col = 0; col < 10; col++) {
       var curmino = new Mino(col*40, row*40, color(grid[row][col]));
@@ -111,7 +112,6 @@ function press(e) {
     // drop the block onto the floor automatically
   }
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   display();
 }
 
