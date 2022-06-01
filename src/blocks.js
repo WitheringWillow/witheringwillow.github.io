@@ -34,8 +34,8 @@ class Polymino {
 
 export const blocks = {
     "z": new Polymino([
-        [0, 1, 0],
-        [1, 1, 1],
+        [1, 1, 0],
+        [0, 1, 1],
         [0, 0, 0]
     ]),
     "s": new Polymino([

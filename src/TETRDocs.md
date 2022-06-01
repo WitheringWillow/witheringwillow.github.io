@@ -15,8 +15,12 @@ Blocks are defined with a square 2D array. They can be rotated with the `.rot()`
 display() will clear the current board and redisplay the grid.  
 Grids are displayed by assigning each item a Mino, containing the x, y, and color.
 
+### validPlace()
+Takes in a square 2D array, and a x and y value.
+Returns true if the square can go there.
+
 ### addMinos()
-addMinos will take in a square 2D array, and an x and y value as input.  
+addMinos will take in a square 2D array, and a x and y value as input.  
 It will check if the block can fit in the space. If it can't, the function will stop.  
 Then, it puts the block in the grid at its position.  
 Blocks start at the top left.
