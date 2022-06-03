@@ -6,8 +6,7 @@ class Polymino {
     // Rotates the polymino 90 degrees to the left {ind} amount of times.
     rot(ind) {
         if(ind < 0) {
-            ind = -ind;
-            ind += 2;
+            ind = -(-(ind)%4) + 4;
         }
 
         // The mess with JSON copies the 2d array without causing pointer conflict.

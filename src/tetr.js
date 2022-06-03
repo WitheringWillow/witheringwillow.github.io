@@ -76,7 +76,6 @@ function display() {
 		while (validPlace(current_shape.rot(current_rot), current_x, ghost_y + 1)){
 			ghost_y++;
 		}
-		console.log(ghost_y)
 
 		for (var i = 0; i < polysize; i++) {
 			for (var j = 0; j < polysize; j++) {
@@ -144,6 +143,25 @@ function addMinos(shape, x, y) {
 			}
 		}
 	}
+	clearLines();
+}
+
+function clearLines() {
+	for(var i = 0; i < 20; i++) {
+		var pieces_in_this_line_in_particular = 0; // also known as PITLIP
+		for(var y = 0; y < 10; y++) {
+			if(grid[i][y] != 0) {
+				pieces_in_this_line_in_particular++;
+			}
+		}
+		console.log(pieces_in_this_line_in_particular);
+		if(pieces_in_this_line_in_particular == 10) {
+			for (var rows = i; rows > 0; rows--) {
+				grid[rows] = [...grid[rows-1]];
+				lines_cleared++;
+			}
+		}
+	}
 }
 
 function randInt(min, max) {
@@ -164,11 +182,19 @@ var current_x;
 // positive x is right
 var current_rot;
 // positive rot is clockwise
+var alive = true;
+var lines_cleared = 0;
 resetMinos();
 
 addEventListener("keydown", press);
 
 function press(e) {
+	// resetting here if we ever add it
+	
+	if(!alive) {
+		return;
+	}
+	
 	if (e.key == "ArrowDown") {
 		if (!validPlace(current_shape.rot(current_rot), current_x, current_y + 1)) {
 			return
@@ -206,7 +232,6 @@ function press(e) {
 		}
 		current_rot += 2;
 	}
-	console.log(e.key)
 	if (e.key == " ") {
 		while (validPlace(current_shape.rot(current_rot), current_x, current_y + 1)){
 			current_y++;
@@ -243,11 +268,20 @@ function press(e) {
 
 
 var frames_per_down = 50; // reset to this value
-var frames_until_down = 50; // decrease this value
+var frames_until_down = frames_per_down; // decrease this value
+var frames_to_lock = 50;
+var frames_until_lock = frames_to_lock;
 
-setInterval(gameloop, 20);
+var loop = setInterval(gameloop, 20);
 function gameloop() {
+	if(!validPlace(current_shape.rot(current_rot), current_x, current_y + 1)) {
+		frames_until_lock--;
+	}
 	// moves the pieces down automatically
+	
+	if (true){
+		
+	}
 	frames_until_down--;
 	if (frames_until_down < 0) {
 		frames_until_down = frames_per_down
@@ -255,9 +289,11 @@ function gameloop() {
 			current_y++;
 		}
 		else {
-			addMinos(current_shape.rot(current_rot), current_x, current_y);
-			held = false;
-			resetMinos();
+			if(frames_until_lock < 0) { 
+				addMinos(current_shape.rot(current_rot), current_x, current_y);
+				held = false;
+				resetMinos();
+			}
 		}
 	}
 	display();
@@ -284,6 +320,7 @@ function chooseMinos() {
 }
 
 function resetMinos() {
+	frames_until_lock = frames_to_lock;
 	var shfasjkdfhdkf = chooseMinos();
 	current_shape = blocks[shfasjkdfhdkf];
 	current_y = 0;
@@ -292,6 +329,11 @@ function resetMinos() {
 		current_x++;
 	}
 	current_rot = 0;
+	if (!validPlace(current_shape.rot(current_rot), current_x, current_y)) {
+		alive = false;
+		clearInterval(loop);
+		current_y = -10;
+	}
 }
 display();
 
