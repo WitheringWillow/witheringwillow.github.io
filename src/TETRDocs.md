@@ -5,7 +5,7 @@
   - WitheringWillow
   - AnthonyFic-code
   - MagicPickle123
-- Created for a final
+- Created for a school final
 
 # The actual documentation 
 ### Blocks
@@ -14,6 +14,9 @@ Blocks are defined with a square 2D array. They can be rotated with the `.rot()`
 ### Displaying and display()
 display() will clear the current board and redisplay the grid.  
 Grids are displayed by assigning each item a Mino, containing the x, y, and color.
+
+### randInt()
+Returns a random integer between min and max.
 
 ### validPlace()
 Takes in a square 2D array, and a x and y value.
@@ -29,6 +32,13 @@ Blocks start at the top left.
 In code, the order of tetraminos should go Z, S, L, J, T, I, O
 
 # TODO
-1) Make the piece
-2) Give it controls
-3) Place the piece
+1) SRS
+2) Removing lines
+3) holding / it's working, but not displayed
+4) Next pieces / it's working, but not displayed
+5) losing
+6) points
+7) levelling
+
+# What is the variable shfasjkdfhdkf?
+Yeah
