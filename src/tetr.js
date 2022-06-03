@@ -9,7 +9,6 @@ var grid = [];
 for (var i = 0; i < 20; i++) {
 	grid.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 }
-grid[10][5] = 1
 
 // Visuals
 class Mino {
@@ -38,6 +37,22 @@ class ActiveMino {
 	}
 }
 
+class GhostMino {
+	constructor(x, y, color) {
+		this.x = x;
+		this.y = y;
+		this.color = color;
+	}
+
+	draw() {
+		ctx.fillStyle = this.color;
+		ctx.fillRect(this.x + 2, this.y + 2, 36, 4);
+		ctx.fillRect(this.x + 2, this.y + 34, 36, 4);
+		ctx.fillRect(this.x + 2, this.y + 2, 4, 36);
+		ctx.fillRect(this.x + 34, this.y + 2, 4, 36);
+	}
+}
+
 function display() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);;
 	for (var row = 0; row < 20; row++) {
@@ -53,6 +68,21 @@ function display() {
 				if (current_shape.rot(current_rot)[i][j] == 0) { continue; }
 				var curmino = new ActiveMino((current_x + j) * 40, (current_y + i) * 40, color(current_shape.rot(current_rot)[i][j]))
 				curmino.draw();
+			}
+		}
+		
+		var ghost_y = current_y;
+
+		while (validPlace(current_shape.rot(current_rot), current_x, ghost_y + 1)){
+			ghost_y++;
+		}
+		console.log(ghost_y)
+
+		for (var i = 0; i < polysize; i++) {
+			for (var j = 0; j < polysize; j++) {
+				if (current_shape.rot(current_rot)[i][j] == 0) { continue; }
+				var gmino = new GhostMino((current_x + j) * 40, (ghost_y + i) * 40, color(current_shape.rot(current_rot)[i][j]))
+				gmino.draw();
 			}
 		}
 	}
@@ -123,8 +153,10 @@ function randInt(min, max) {
 }
 // Gameplay
 var listofMinos = ['z', 's', 'l', 'j', 't', 'i', 'o'];
-var bag = listofMinos;
-
+var bag = [...listofMinos];
+var nexts = [];
+var hold = null;
+var held = false;
 var current_shape;
 var current_y;
 // positive y is down
@@ -174,15 +206,35 @@ function press(e) {
 		}
 		current_rot += 2;
 	}
-	if (e.key == "Space") {
-		// hard drop
+	console.log(e.key)
+	if (e.key == " ") {
+		while (validPlace(current_shape.rot(current_rot), current_x, current_y + 1)){
+			current_y++;
+		}
+		addMinos(current_shape.rot(current_rot), current_x, current_y);
+		held = false;
+		resetMinos();
 	}
-	if (e.key == "KeyC") {
+	if (e.key == "c") {
 		// hold piece
-	}
-	if(e.key == "b") {
-		if (validPlace(current_shape.rot(current_rot), current_x, current_y)) {
-			return
+		// if empty: put current into hold and get a new block
+		// if full: swap current and held
+		
+		if (!held){
+			if (hold == null) {
+				held = true;
+				hold = current_shape;
+				resetMinos();
+			}
+			else {
+				held = true;
+				var temp = hold;
+				hold = current_shape;
+				current_shape = temp;
+				current_y = 0;
+				current_x = 4;
+				current_rot = 0;
+			}
 		}
 	}
 	display();
@@ -204,34 +256,45 @@ function gameloop() {
 		}
 		else {
 			addMinos(current_shape.rot(current_rot), current_x, current_y);
+			held = false;
 			resetMinos();
 		}
 	}
 	display();
 }
 
-
+function chooseStartingBag() {
+	var unused = [...listofMinos];
+	for(var i = 0; i < listofMinos.length; i++) {
+		var num = randInt(0, bag.length - 1);
+		nexts.push(bag.splice(num, 1));
+	}
+}
 
 function chooseMinos() {
 	// choose one mino to use
 	// refill when empty
-	var num = randInt(0, bag.length - 1);
-	var used = bag.splice(num, 1);
-	if (used.length == 0) {
-		bag = listofMinos;
+	if (bag.length == 0) {
+		bag = [...listofMinos];
 	}
+	var num = randInt(0, bag.length - 1);
+	nexts.push(bag.splice(num, 1));
+	var used = nexts.splice(0, 1);
 	return used;
 }
 
 function resetMinos() {
-	current_shape = blocks[chooseMinos()];
+	var shfasjkdfhdkf = chooseMinos();
+	current_shape = blocks[shfasjkdfhdkf];
 	current_y = 0;
-	current_x = 4;
+	current_x = 3;
+	if(shfasjkdfhdkf == "o") {
+		current_x++;
+	}
 	current_rot = 0;
-	// addMinos(current_shape.rot(current_rot), current_y, current_x);
 }
-resetMinos();
 display();
+
 // Favicon
 
 var favicon_images = [
