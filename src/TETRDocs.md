@@ -32,6 +32,4 @@ Blocks start at the top left.
 In code, the order of tetraminos should go Z, S, L, J, T, I, O
 
 # TODO
-1) SRS
-2) points
-3) levelling
+1) points
