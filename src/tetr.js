@@ -4,7 +4,6 @@ import { blocks } from './blocks.js';
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
-
 var grid = [];
 for (var i = 0; i < 20; i++) {
 	grid.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
@@ -18,33 +17,22 @@ class Mino {
 		this.color = color;
 	}
 
-	draw() {
+	drawAsMino() {
 		ctx.fillStyle = this.color;
 		ctx.fillRect(this.x + 2, this.y + 2, 36, 36);
 	}
-}
 
-class ActiveMino {
-	constructor(x, y, color) {
-		this.x = x;
-		this.y = y;
-		this.color = color;
+	drawAsPreview() {
+		ctx.fillStyle = this.color;
+		ctx.fillRect(this.x + 1, this.y + 1, 28, 28);
 	}
 
-	draw() {
+	drawAsActive() {
 		ctx.fillStyle = this.color;
 		ctx.fillRect(this.x, this.y, 40, 40);
 	}
-}
 
-class GhostMino {
-	constructor(x, y, color) {
-		this.x = x;
-		this.y = y;
-		this.color = color;
-	}
-
-	draw() {
+	drawAsGhost() {
 		ctx.fillStyle = this.color;
 		ctx.fillRect(this.x + 2, this.y + 2, 36, 4);
 		ctx.fillRect(this.x + 2, this.y + 34, 36, 4);
@@ -54,23 +42,53 @@ class GhostMino {
 }
 
 function display() {
+	// drawing grid
 	ctx.clearRect(0, 0, canvas.width, canvas.height);;
+	ctx.fillStyle = 'rgb(255, 255, 255)';
+	ctx.font = '36px serif';
+  	ctx.fillText('HOLD', 415, 50);
+	ctx.fillText('NEXT', 415, 200);
 	for (var row = 0; row < 20; row++) {
 		for (var col = 0; col < 10; col++) {
 			var curmino = new Mino(col * 40, row * 40, color(grid[row][col]));
-			curmino.draw();
+			curmino.drawAsMino();
 		}
 	}
+
+	// drawing held block
+	var temp_hold = (hold == null) ? [[0,0,0],[0,0,0],[0,0,0]] : hold.rot(0);
+	
+	for (var row = 0; row < temp_hold.length; row++) {
+		for (var col = 0; col < temp_hold[row].length; col++) {
+			var temp_color = (temp_hold[row][col] == 0) ? 'rgb(40, 40, 40)' : color(temp_hold[row][col])
+			var curmino = new Mino((col+13.5) * 30, (row+2) * 30, temp_color);
+			curmino.drawAsPreview();
+		}
+	}
+	// displaying the next few pieces
+	for(var piece = 0; piece < 5; piece++) {
+		var current_displayed_piece = blocks[next_five[piece]].rot(0);
+		for(var row = 0; row < current_displayed_piece.length; row++) {
+			for(var col = 0; col < current_displayed_piece[row].length; col++) {
+				var temp_color = (current_displayed_piece[row][col] == 0) ? 'rgb(40, 40, 40)' : color(current_displayed_piece[row][col])
+				var curmino = new Mino((col+13.5) * 30, (row + 4 + (3 * (1+piece))) * 30, temp_color);
+				curmino.drawAsPreview();
+			}
+		}
+	}
+
+	// drawing the block that's being placed now
 	if (current_rot != undefined) {
 		var polysize = current_shape.rot(0).length;
 		for (var i = 0; i < polysize; i++) {
 			for (var j = 0; j < polysize; j++) {
 				if (current_shape.rot(current_rot)[i][j] == 0) { continue; }
-				var curmino = new ActiveMino((current_x + j) * 40, (current_y + i) * 40, color(current_shape.rot(current_rot)[i][j]))
-				curmino.draw();
+				var curmino = new Mino((current_x + j) * 40, (current_y + i) * 40, color(current_shape.rot(current_rot)[i][j]))
+				curmino.drawAsActive();
 			}
 		}
 		
+		// and also drawing where the block will be if it hard drops now
 		var ghost_y = current_y;
 
 		while (validPlace(current_shape.rot(current_rot), current_x, ghost_y + 1)){
@@ -80,8 +98,8 @@ function display() {
 		for (var i = 0; i < polysize; i++) {
 			for (var j = 0; j < polysize; j++) {
 				if (current_shape.rot(current_rot)[i][j] == 0) { continue; }
-				var gmino = new GhostMino((current_x + j) * 40, (ghost_y + i) * 40, color(current_shape.rot(current_rot)[i][j]))
-				gmino.draw();
+				var gmino = new Mino((current_x + j) * 40, (ghost_y + i) * 40, color(current_shape.rot(current_rot)[i][j]))
+				gmino.drawAsGhost();
 			}
 		}
 	}
@@ -154,7 +172,6 @@ function clearLines() {
 				pieces_in_this_line_in_particular++;
 			}
 		}
-		console.log(pieces_in_this_line_in_particular);
 		if(pieces_in_this_line_in_particular == 10) {
 			for (var rows = i; rows > 0; rows--) {
 				grid[rows] = [...grid[rows-1]];
@@ -172,9 +189,9 @@ function randInt(min, max) {
 // Gameplay
 var listofMinos = ['z', 's', 'l', 'j', 't', 'i', 'o'];
 var bag = [...listofMinos];
-var nexts = [];
 var hold = null;
 var held = false;
+var nexts = [];
 var current_shape;
 var current_y;
 // positive y is down
@@ -184,11 +201,16 @@ var current_rot;
 // positive rot is clockwise
 var alive = true;
 var lines_cleared = 0;
+var level = 1;
+var next_five = [];
+
+chooseStartingBag();
 resetMinos();
 
 addEventListener("keydown", press);
 
 function press(e) {
+	// document.getElementById('sound').play();
 	// resetting here if we ever add it
 	
 	if(!alive) {
@@ -265,7 +287,13 @@ function press(e) {
 	display();
 }
 
-
+function leveling(){
+	var next_level_req = 10;
+	if (lines_cleared >= next_lines_req){
+		level++;
+		next_level_req += 10;
+	}
+}
 
 var frames_per_down = 50; // reset to this value
 var frames_until_down = frames_per_down; // decrease this value
@@ -278,10 +306,6 @@ function gameloop() {
 		frames_until_lock--;
 	}
 	// moves the pieces down automatically
-	
-	if (true){
-		
-	}
 	frames_until_down--;
 	if (frames_until_down < 0) {
 		frames_until_down = frames_per_down
@@ -302,8 +326,8 @@ function gameloop() {
 function chooseStartingBag() {
 	var unused = [...listofMinos];
 	for(var i = 0; i < listofMinos.length; i++) {
-		var num = randInt(0, bag.length - 1);
-		nexts.push(bag.splice(num, 1));
+		var num = randInt(0, unused.length - 1);
+		nexts.push(unused.splice(num, 1));
 	}
 }
 
@@ -315,17 +339,20 @@ function chooseMinos() {
 	}
 	var num = randInt(0, bag.length - 1);
 	nexts.push(bag.splice(num, 1));
-	var used = nexts.splice(0, 1);
+	var used = nexts.splice(0, 1)[0][0];
+	for(var i = 0; i < 5; i++) {
+		next_five[i] = nexts[i][0];
+	}
 	return used;
 }
 
 function resetMinos() {
 	frames_until_lock = frames_to_lock;
-	var shfasjkdfhdkf = chooseMinos();
-	current_shape = blocks[shfasjkdfhdkf];
+	var chosen_minos = chooseMinos();
+	current_shape = blocks[chosen_minos];
 	current_y = 0;
 	current_x = 3;
-	if(shfasjkdfhdkf == "o") {
+	if(chosen_minos == "o") {
 		current_x++;
 	}
 	current_rot = 0;

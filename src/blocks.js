@@ -66,5 +66,10 @@ export const blocks = {
     "o": new Polymino([
         [7, 7],
         [7, 7]
+    ]),
+    " ": new Polymino([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
     ])
 };
