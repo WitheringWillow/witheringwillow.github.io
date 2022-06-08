@@ -143,6 +143,23 @@ function good_score(n) {
 	}
 }
 
+// https://stackoverflow.com/a/16436975
+function arraysEqual(a, b) {
+	if (a === b) return true;
+	if (a == null || b == null) return false;
+	if (a.length !== b.length) return false;
+  
+	// If you don't care about the order of the elements inside
+	// the array, you should sort both arrays here.
+	// Please note that calling sort on an array will modify that array.
+	// you might want to clone your array first.
+  
+	for (var i = 0; i < a.length; ++i) {
+	  if (a[i] !== b[i]) return false;
+	}
+	return true;
+}
+
 function validPlace(shape, x, y) {
 	var polysize = shape.length;
 	for (var i = 0; i < polysize; i++) {
@@ -184,6 +201,7 @@ function addMinos(shape, x, y) {
 
 function clearLines() {
 	var tspinned = checkTspin();
+	console.log(tspinned);
 	var cleared = 0;
 	for(var i = 0; i < 20; i++) {
 		var pieces_in_this_line_in_particular = 0; // also known as PITLIP
@@ -206,11 +224,57 @@ function clearLines() {
 			}
 		}
 	}
-	addPoints(cleared, tspinned);
+	points += addPoints(cleared, tspinned);
 }
 
+var b2b = false;
 function addPoints(num_cleared, have_tspinned) {
-	return 0;
+	var points_this_turn = 0;
+	var b2bmulti = b2b ? 1.5 : 1;
+	if(arraysEqual(grid[19], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])) {
+		points_this_turn += (4000 * level);
+	}
+	if(have_tspinned) {
+		switch(num_cleared) {
+			case 1:
+				b2b = true;
+				points_this_turn += 400 * level * b2bmulti;
+				break;
+			case 2:
+				b2b = true;
+				points_this_turn += 1200 * level * b2bmulti;
+				break;
+			case 3:
+				b2b = true;
+				points_this_turn += 1800 * level * b2bmulti;
+				break;
+			default:
+				break;
+		}
+	} else {
+		switch(num_cleared) {
+			default:
+				break;
+			case 1:
+				b2b = false;
+				points_this_turn += 50 * level * b2bmulti;
+				break;
+			case 2:
+				b2b = false;
+				points_this_turn += 200 * level * b2bmulti;
+				break;
+			case 3:
+				b2b = false;
+				points_this_turn += 400 * level * b2bmulti;
+				break;
+			case 4:
+				b2b = true;
+				points_this_turn += 1200 * level * b2bmulti;
+				break;
+		}
+	}
+		
+	return points_this_turn;
 }
 
 function randInt(min, max) {
@@ -381,7 +445,7 @@ function rotate(dir) {
 }
 
 function checkTspin() {
-	if(current_y = 20) { return false; }
+	if(current_y == 18) { return false; }
 	var t_counter = 0;
 	if(current_shape == blocks['t']) {
 		//current_x + 1, current_y + 1 == center
