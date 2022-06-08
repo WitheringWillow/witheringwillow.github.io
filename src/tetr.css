@@ -1,0 +1,8 @@
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: rgb(40, 40, 40);
+}
+
+#tetris {
+    border: 3px dashed white;
+}
