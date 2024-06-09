@@ -9,7 +9,7 @@
 html, body {
   background: var(--color-bg);
   color: var(--color-fg);
-  font-family: "Fira Code";
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
   height: 100%;
   width: 100%;
   margin: 0;
